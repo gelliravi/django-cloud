@@ -32,6 +32,7 @@ die() {
     usage
     exit $error_code
 }
+#TODO improve the die script and use it in other functions
 
 create_directories() {
 mkdir -p $PROJECT_ROOT/{media,apache2}
