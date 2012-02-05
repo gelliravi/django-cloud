@@ -52,7 +52,7 @@ sudo apt-get install -y nginx apache2 libapache2-mod-wsgi
 }
 
 install_py() {
-sudo apt-get install -y python python-setuptools python-dev python-django python-mysqldb python-pip python-virtualenv
+sudo apt-get install -y pep8 python python-setuptools python-dev python-django python-mysqldb python-pip python-virtualenv
 }
 
 basic_django() {
