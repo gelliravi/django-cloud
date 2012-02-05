@@ -42,6 +42,7 @@ sleep 3 #waiting for mysql to restart
 mysqladmin -uroot password $PASSWORD
 sudo service mysql restart
 
+
 set -ex
 
 
