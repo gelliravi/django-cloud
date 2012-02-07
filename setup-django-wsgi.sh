@@ -40,7 +40,7 @@ mkdir -p $PROJECT_ROOT/{media,apache2,devtests}
 
 #TODO -> make apt-get non-interactive and no ouptut
 install_updates() {
-sudo apt-get update && sudo apt-get upgrade -y
+sudo apt-get update && sudo apt-get upgrade -y 1>&2
 }
 
 install_baseline() {
