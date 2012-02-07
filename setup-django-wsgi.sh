@@ -27,15 +27,15 @@ MAIN_DOMAIN=${3-com}
 die() {
     message=$1
     error_code=$2
-
     echo "$SCRIPT_NAME: $message" 1>&2
     usage
     exit $error_code
 }
-#TODO improve the die script and use it in other functions
+#TODO Use the die script in other functions
 
 create_directories() {
-mkdir -p $PROJECT_ROOT/{media,apache2}
+mkdir -p $PROJECT_ROOT/{media,apache2,devtests}
+
 }
 
 #TODO -> make apt-get non-interactive and no ouptut
@@ -52,7 +52,8 @@ sudo apt-get install -y nginx apache2 libapache2-mod-wsgi
 }
 
 install_py() {
-sudo apt-get install -y pep8 python python-setuptools python-dev python-django python-mysqldb python-pip python-virtualenv
+sudo apt-get install -y pep8 python python-setuptools python-dev python-django python-mysqldb python-pip python-virtualenv python-sqlite python-pysqlite2 sqlite3
+# may include python-nose
 }
 
 basic_django() {
@@ -69,7 +70,7 @@ configure_apache() {
     LogLevel warn
     ErrorLog $PROJECT_ROOT/apache2/${SITE_NAME}_error.log
     CustomLog $PROJECT_ROOT/apache2/${SITE_NAME}_access.log combined
-    #python-path=/home/$LOCAL_USER/env/lib/python2.6/site-packages  #from cosmin
+    #python-path=/home/$LOCAL_USER/env/lib/python2.6/site-packages  #from cosmin #ask cosmin
     
     WSGIDaemonProcess $SITE_NAME user=www-data group=www-data maximum-requests=10000 
     WSGIProcessGroup $SITE_NAME
@@ -81,6 +82,7 @@ configure_apache() {
     </Directory>
 
 #TODO -> check if a directory allow,deny tag is reqd. for apache2 directory
+#TODO -> ADD STATIC URL
 
     Alias $MEDIA_URL $PROJECT_ROOT/media/
     <Directory $PROJECT_ROOT/media>
@@ -103,7 +105,7 @@ project_root='${PROJECT_ROOT}'
 site_name='${SITE_NAME}'
 site_root=project_root + '/' + site_name
 
-# sys.stdout = sys.stderr # from chipy_demo by Rohit Sankaran
+# sys.stdout = sys.stderr # from chipy_demo by Rohit Sankaran # ask Rohit
 sys.path.append(project_root)
 sys.path.append(site_root)
 os.environ['DJANGO_SETTINGS_MODULE'] = site_name + '.settings'
@@ -123,7 +125,7 @@ cat << EOF | tee -a $PROJECT_ROOT/$SITE_NAME/settings.py
 
 
 try:
-    from local_settings import *
+    from devtests.dev_settings import *
 except ImportErrror:
     pass
 
