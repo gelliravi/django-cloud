@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set +ex
+set -ex
 
 
 usage() {
@@ -146,4 +146,4 @@ if [ $out -ne "0" ] ; then
    die "cannot complete process" $out
 fi
 
-set -ex 
+set +ex 

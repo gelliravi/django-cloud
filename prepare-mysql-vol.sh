@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set +ex
+set -ex
 
 SCRIPT_NAME = $0
 
@@ -75,4 +75,4 @@ if [ $out -ne 0 ]; then
     die "Something wicked happened !" $out
 fi
 
-set -ex
+set +ex

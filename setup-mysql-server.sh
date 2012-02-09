@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set +ex
+set -ex
 
 usage() {
 cat <<EOF
@@ -43,7 +43,7 @@ mysqladmin -uroot password $PASSWORD
 sudo service mysql restart
 
 
-set -ex
+set +ex
 
 
 
