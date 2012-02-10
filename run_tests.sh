@@ -21,6 +21,12 @@ if  ! which expect  > /dev/null ; then
     For Debian use: sudo apt-get install expect" 1
 fi
 
+if [ $# -lt 3 ]; then
+    usage 
+    die "Invalid syntax" 1
+fi
+
+#TODO -> add a check for nosetests installation
 #TODO -> Use getopts
 USER=$1
 PASS=$2
@@ -31,25 +37,41 @@ MAIN_DOMAIN=${6-com}
 
 #TODO -> Make it unrelative to the directory from which the script is executed
 djscript=setup-django-wsgi.sh
+
+#djscript=dummy.sh
+#tilscript=utils_expect.sh
+
 if [ ! -f $djscript ]; then
-    die "Cannot Find Script: $script_required. Did you grab the entire
+    die "Cannot Find Script: ${djscript}. Did you grab the entire
 repository of code ?" $?
 fi
+#prompt=":|#|\\$"  
 
-    no_hosts_args="-o StrictHostKeyChecking=no \
+no_hosts_args="-o StrictHostKeyChecking=no \
                -o UserKnownHostsFile=/dev/null \
                -o LogLevel=ERROR"
 
-    if [ $USER = "root" ]; then
-        PROMPT=#
-    else PROMPT='\\$'
-    fi
-    
-    expect -c "
-    spawn scp $no_hosts_args $djscript ${USER}@${HOST}:~/
-    expect "password:"
-    send -- ${PASS}\n
-    expect eof
-    "
+expect  << EOF
+set timeout -1 
+;# exp_internal 1
+set prompt ":|#|\\\\$"
+spawn scp $no_hosts_args $djscript ${USER}@${HOST}:~/
+expect "password:" { send -- ${PASS}\n }
+expect eof
+spawn ssh $no_hosts_args ${USER}@${HOST}
+expect "password:" { send -- ${PASS}\n }
+expect -re "\$prompt " { 
+    send --  {bash ${djscript} ${SITE_NAME} ${EMAIL_ADD} ${MAIN_DOMAIN}  2>error.out}
+    send -- \r 
+    }
+expect -re "${USER}: " { send -- ${PASS}\n } ;# password for sudo in the script
+expect -re  "\$prompt " { send -- exit\r  }
+expect eof  
+spawn scp ${USER}@${HOST}:~/error.out .
+expect "password:" { send -- ${PASS}\n }
+expect eof
+EOF
+cat error.out
 
+#nosetests
 set +ex

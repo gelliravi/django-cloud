@@ -40,7 +40,7 @@ mkdir -p $PROJECT_ROOT/{media,apache2,devtests}
 
 #TODO -> make apt-get non-interactive and no ouptut
 install_updates() {
-sudo apt-get update && sudo apt-get upgrade -y 1>&2
+sudo apt-get update && sudo apt-get upgrade -y 
 }
 
 install_baseline() {
@@ -126,7 +126,7 @@ cat << EOF | tee -a $PROJECT_ROOT/$SITE_NAME/settings.py
 
 try:
     from devtests.dev_settings import *
-except ImportErrror:
+except ImportError:
     pass
 
 EOF
