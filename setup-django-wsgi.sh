@@ -35,7 +35,9 @@ die() {
 
 create_directories() {
 mkdir -p $PROJECT_ROOT/{media,apache2,devtests}
-
+sudo usermod -a -G www-data `whoami`
+sudo chgrp -R 2750 $PROJECT_ROOT/devtests
+# so that when sqlite create files permissions are inherited
 }
 
 #TODO -> make apt-get non-interactive and no ouptut
@@ -52,7 +54,9 @@ sudo apt-get install -y nginx apache2 libapache2-mod-wsgi
 }
 
 install_py() {
-sudo apt-get install -y pep8 python python-setuptools python-dev python-django python-mysqldb python-pip python-virtualenv python-sqlite python-pysqlite2 sqlite3
+sudo apt-get install -y pep8 python python-setuptools python-dev python-django \
+ python-mysqldb python-pip python-virtualenv python-sqlite python-pysqlite2 \
+ sqlite3
 # may include python-nose
 }
 
@@ -139,7 +143,9 @@ activate_apache() {
     sudo /etc/init.d/apache2 reload
 }
 
- create_directories && install_updates && install_baseline && install_servers && install_py && basic_django && configure_apache && configure_wsgi && activate_apache && configure_settingspy
+ create_directories && install_updates && install_baseline && install_servers \
+  &&  install_py && basic_django && configure_apache && configure_wsgi && \
+     activate_apache && configure_settingspy
  
 out=$?
 if [ $out -ne "0" ] ; then

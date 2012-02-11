@@ -69,6 +69,7 @@ expect -re  "\$prompt " { send -- exit\r  }
 expect eof  
 spawn scp ${USER}@${HOST}:~/error.out .
 expect "password:" { send -- ${PASS}\n }
+expect -re  "\$prompt " { send -- exit\r  }
 expect eof
 EOF
 cat error.out

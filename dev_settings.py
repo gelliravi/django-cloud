@@ -1,9 +1,13 @@
 
+import os
+DIRNAME = os.path.abspath(os.path.dirname(__file__).decode('utf-8').replace('\\','/'))
+DBNAME = os.path.join(DIRNAME,'devtests/testdb.sqlite~')
+# directory name devtests is hardcoded in django-wsgi script
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'testdb4myweb.sqlite3~',                      # Or path to database file if using sqlite3.
+        'NAME': DBNAME,                      # Or path to database file if using sqlite3.
         'USER': '',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
@@ -12,4 +16,3 @@ DATABASES = {
 }
 
 DEBUG=True
-#TODO don't hardcode db path
