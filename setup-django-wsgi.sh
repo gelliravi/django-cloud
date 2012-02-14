@@ -34,9 +34,12 @@ die() {
 #TODO Use the die script in other functions
 
 create_directories() {
-mkdir -p $PROJECT_ROOT/{media,apache2,devtests}
-sudo usermod -a -G www-data `whoami`
-sudo chgrp -R 2750 $PROJECT_ROOT/devtests
+mkdir -p ${PROJECT_ROOT}/{media,apache2,${SITE_NAME}/devtests}
+#check about the devtests directory
+#touch ${PROJECT_ROOT}/${SITE_NAME}/devtests/__init__.py
+#sudo usermod -a -G www-data `whoami` # check cosmin's bootstrap_project
+
+#sudo chgrp -R 2750 ${PROJECT_ROOT}/devtests
 # so that when sqlite create files permissions are inherited
 }
 
@@ -56,8 +59,8 @@ sudo apt-get install -y nginx apache2 libapache2-mod-wsgi
 install_py() {
 sudo apt-get install -y pep8 python python-setuptools python-dev python-django \
  python-mysqldb python-pip python-virtualenv python-sqlite python-pysqlite2 \
- sqlite3
-# may include python-nose
+ sqlite3 python-sqlalchemy python-migrate python-docutls
+# may include python-nose python-south 
 }
 
 basic_django() {
@@ -74,7 +77,7 @@ configure_apache() {
     LogLevel warn
     ErrorLog $PROJECT_ROOT/apache2/${SITE_NAME}_error.log
     CustomLog $PROJECT_ROOT/apache2/${SITE_NAME}_access.log combined
-    #python-path=/home/$LOCAL_USER/env/lib/python2.6/site-packages  #from cosmin #ask cosmin
+    #python-path=/home/$LOCAL_USER/env/lib/python2.6/site-packages  #ask cosmin
     
     WSGIDaemonProcess $SITE_NAME user=www-data group=www-data maximum-requests=10000 
     WSGIProcessGroup $SITE_NAME
@@ -105,13 +108,22 @@ cat << EOF | tee $PROJECT_ROOT/apache2/django.wsgi
 import os,sys
 import django.core.handlers.wsgi
 
+# put virtualenv on pythonpath # from chip_demo by rohit sankar
+# import site
+#site.addsitedir('{{ paths.sites }}/{{ site_name }}/lib/python{{ python_version }}/site-packages')
+#site.addsitedir('{{ paths.sites }}/{{ site_name }}/src/src_{{ project_name }}')
+ 
+ 
 project_root='${PROJECT_ROOT}'
 site_name='${SITE_NAME}'
 site_root=project_root + '/' + site_name
 
-# sys.stdout = sys.stderr # from chipy_demo by Rohit Sankaran # ask Rohit
+# redirect print statements to apache log
+sys.stdout = sys.stderr 
+
 sys.path.append(project_root)
 sys.path.append(site_root)
+
 os.environ['DJANGO_SETTINGS_MODULE'] = site_name + '.settings'
 
 _application=django.core.handlers.wsgi.WSGIHandler()

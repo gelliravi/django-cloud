@@ -1,7 +1,7 @@
 
 import os
 DIRNAME = os.path.abspath(os.path.dirname(__file__).decode('utf-8').replace('\\','/'))
-DBNAME = os.path.join(DIRNAME,'devtests/testdb.sqlite~')
+DBNAME = os.path.join(DIRNAME,'testdb.sqlite~')
 # directory name devtests is hardcoded in django-wsgi script
 
 DATABASES = {
