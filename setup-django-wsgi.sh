@@ -17,7 +17,7 @@ fi
    
 
 SCRIPT_NAME=$0
-PROJECT_ROOT=~/mywebsite
+PROJECT_ROOT=~/workspace
 SITE_NAME=$1
 ADMIN_EMAIL=$2
 MEDIA_URL=/media/
@@ -49,7 +49,7 @@ sudo apt-get update && sudo apt-get upgrade -y
 }
 
 install_baseline() {
-sudo apt-get install -y git-core build-essential curl
+sudo apt-get install -y git-core build-essential curl vim
 }
 
 install_servers() {
@@ -58,9 +58,15 @@ sudo apt-get install -y nginx apache2 libapache2-mod-wsgi
 
 install_py() {
 sudo apt-get install -y pep8 python python-setuptools python-dev python-django \
- python-mysqldb python-pip python-virtualenv python-sqlite python-pysqlite2 \
- sqlite3 python-sqlalchemy python-migrate python-docutls
-# may include python-nose python-south 
+  python-pip python-docutls
+sudo apt-get install -y python-sqlite python-pysqlite2 python-sqlalchemy \
+        sqlite3  python-migrate python-mysqldb
+sudo apt-get install -y python-openssl
+sudo pip install virtualenv
+#sudo apt-get -y install libfreetype6 libfreetype6-dev libjpeg8 libjpeg8-dev \
+# libpng12-0 libpng12-dev zlibc zlib1g zlib1g-dev
+
+# may include python-nose python-south python-virtualenv  
 }
 
 basic_django() {
