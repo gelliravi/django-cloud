@@ -10,7 +10,7 @@ Example: $SCRIPT_NAME  mydomain  webmaster@mydomain.org  org
 EOF
 }
 
-if [ $# -lt 2 ]; then
+if [ $# -lt 333 ]; then
    usage
    exit 1
 fi
