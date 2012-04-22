@@ -1,0 +1,28 @@
+
+<VirtualHost *:80>
+    ServerName www.{{ SITE_NAME }}
+    ServerAlias {{ SITE_NAME }}
+    ServerAdmin {{ ADMIN_EMAIL }}
+    LogLevel warn
+    ErrorLog {{ APACHE_DIR }}/{{ SITE_NAME }}_error.log
+    CustomLog {{ APACHE_DIR }}/{{ SITE_NAME }}_access.log combined
+    #python-path=/home/$LOCAL_USER/env/lib/python2.6/site-packages  #ask cosmin
+    
+    WSGIDaemonProcess {{ SITE_NAME }} user=www-data group=www-data maximum-requests=10000 
+    WSGIProcessGroup {{ SITE_NAME }}
+    WSGIScriptAlias / {{ APACHE_DIR }}/django.wsgi
+
+    <Directory $PROJECT_ROOT/$SITE_NAME>
+        Order deny,allow
+        Allow from all
+    </Directory>
+
+#TODO -> check if a directory allow,deny tag is reqd. for apache2 directory
+#TODO -> ADD STATIC URL
+
+    Alias $MEDIA_URL $PROJECT_ROOT/media/
+    <Directory $PROJECT_ROOT/media>
+        Order deny,allow
+        Allow from all
+    </Directory>
+</VirtualHost>
